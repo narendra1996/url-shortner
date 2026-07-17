@@ -21,7 +21,7 @@ public class UrlRedirectController {
         this.clickTrackingService = clickTrackingService;
     }
 
-    @GetMapping("/{shortCode}")
+    @GetMapping("/{shortCode:[a-zA-Z0-9]+}")
     public ResponseEntity<Void> resolveAndRedirect(@PathVariable String shortCode, HttpServletRequest request) {
         String longUrl = resolverService.resolve(shortCode);
 

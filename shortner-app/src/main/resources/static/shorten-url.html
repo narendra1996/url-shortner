@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles Schwab | Premium URL Shortener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.8284 10.1716L17.364 6.63604C18.9261 5.07394 21.4587 5.07394 23.0208 6.63604C24.5829 8.19814 24.5829 10.7308 23.0208 12.2929L19.4853 15.8284" stroke="url(#paint0_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10.1716 13.8284L6.63604 17.364C5.07394 18.9261 2.54131 18.9261 0.97921 17.364C-0.582894 15.8019 -0.582894 13.2692 0.97921 11.7071L4.51472 8.17157" stroke="url(#paint1_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8.05025 15.9497L15.9497 8.05025" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="paint0_linear" x1="13.8284" y1="10.1716" x2="23.0208" y2="12.2929" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#3B82F6"/>
+                            <stop offset="1" stop-color="#8B5CF6"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear" x1="0.97921" y1="11.7071" x2="10.1716" y2="17.364" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#3B82F6"/>
+                            <stop offset="1" stop-color="#8B5CF6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>Charles Schwab</span>
+            </div>
+            <div class="user-profile">
+                <span class="user-id-badge" id="userIdBadge">Generating ID...</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero">
+            <h1>Shorten Your Links</h1>
+            <p>A highly scalable, performant, and reliable URL shortener.</p>
+            
+            <form id="shortenForm" class="shorten-form glass-panel">
+                <div class="input-group">
+                    <input type="url" id="longUrlInput" placeholder="Paste your long URL here..." required>
+                    <button type="submit" id="shortenBtn" class="btn btn-primary">
+                        <span class="btn-text">Shorten</span>
+                        <div class="loader hidden"></div>
+                    </button>
+                </div>
+                <div id="formError" class="error-msg"></div>
+            </form>
+
+            <div id="resultCard" class="result-card glass-panel hidden">
+                <div class="result-content">
+                    <div class="result-urls">
+                        <p class="long-url" id="resultLongUrl"></p>
+                        <a href="#" target="_blank" class="short-url" id="resultShortUrl"></a>
+                    </div>
+                    <button class="btn btn-icon copy-btn" id="copyResultBtn" title="Copy to clipboard">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <div class="dashboard-header">
+                <h2>My Links</h2>
+                <button id="refreshBtn" class="btn btn-outline btn-sm">Refresh</button>
+            </div>
+            
+            <div id="linksLoading" class="links-loading">
+                <div class="loader"></div>
+            </div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-icon">🔗</div>
+                <h3>No links yet</h3>
+                <p>Shorten a URL above to see it appear here.</p>
+            </div>
+
+            <div class="links-grid" id="linksGrid">
+                <!-- Cards will be injected here via JS -->
+            </div>
+        </section>
+    </main>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <template id="linkCardTemplate">
+        <div class="link-card glass-panel">
+            <div class="card-header">
+                <div class="card-date"></div>
+                <button class="btn btn-icon delete-btn" title="Delete Link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+            </div>
+            <div class="card-body">
+                <a href="#" target="_blank" class="card-short-url"></a>
+                <p class="card-long-url"></p>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    <span class="click-count">Loading...</span> clicks
+                </div>
+                <button class="btn btn-secondary btn-sm copy-btn">Copy</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="/app.js"></script>
+</body>
+</html>

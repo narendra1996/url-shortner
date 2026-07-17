@@ -4,6 +4,7 @@ import com.charles.schwab.url.shortner.app.security.RateLimitInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -24,6 +25,12 @@ public class WebConfig implements WebMvcConfigurer {
         // a CDN/Edge to handle that scale, but we can include it here for local safety.
         registry.addInterceptor(rateLimitInterceptor)
                 .addPathPatterns("/api/**", "/*") // applies to all short code resolution as well
-                .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**");
+                .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/shorten-url.html", "/style.css", "/app.js");
+    }
+
+    @Override
+    public void addViewControllers(@NonNull ViewControllerRegistry registry) {
+        registry.addViewController("/shorten-url").setViewName("forward:/shorten-url.html");
+        registry.addViewController("/").setViewName("redirect:/shorten-url");
     }
 }
