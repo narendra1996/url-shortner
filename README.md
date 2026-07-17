@@ -17,21 +17,12 @@ This project is organized as a Maven multi-module project:
 
 *   **Java 21** or higher.
 *   **Maven** installed on your system path.
-*   **Docker & Docker Compose** (for running PostgreSQL and Redis).
 
 ---
 
 ## Getting Started
 
-### 1. Start External Services (Database & Cache)
-
-The application uses PostgreSQL as its primary datastore and Redis for rate-limiting and metadata caching. Spin them up using Docker Compose:
-
-```bash
-docker-compose up -d
-```
-
-### 2. Build the Project
+### 1. Build the Project
 
 Use Maven to build the multi-module project:
 
@@ -39,7 +30,7 @@ Use Maven to build the multi-module project:
 mvn clean install
 ```
 
-### 3. Run the Application
+### 2. Run the Application
 
 #### A. Through Maven CLI
 
