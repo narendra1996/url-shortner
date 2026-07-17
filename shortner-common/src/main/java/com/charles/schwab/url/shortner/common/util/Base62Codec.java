@@ -5,6 +5,9 @@ public class Base62Codec {
     private static final int BASE = ALPHABET.length();
 
     public static String encode(long id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("ID must be non-negative");
+        }
         if (id == 0) {
             return String.valueOf(ALPHABET.charAt(0));
         }
@@ -17,9 +20,16 @@ public class Base62Codec {
     }
 
     public static long decode(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("String must not be empty");
+        }
         long num = 0;
         for (int i = 0; i < str.length(); i++) {
-            num = num * BASE + ALPHABET.indexOf(str.charAt(i));
+            int index = ALPHABET.indexOf(str.charAt(i));
+            if (index == -1) {
+                throw new IllegalArgumentException("Invalid character in Base62 string: " + str.charAt(i));
+            }
+            num = num * BASE + index;
         }
         return num;
     }
