@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="1" author="architect">
+        <createTable tableName="url_mapping">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="short_code" type="VARCHAR(16)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="long_url" type="VARCHAR(2048)">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="VARCHAR(64)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+            <column name="expires_at" type="TIMESTAMP" />
+            <column name="is_active" type="CHAR(1)" defaultValue="Y">
+                <constraints nullable="false" />
+            </column>
+            <column name="idempotency_key" type="VARCHAR(64)" />
+        </createTable>
+
+        <createIndex tableName="url_mapping" indexName="idx_url_mapping_short_code">
+            <column name="short_code" />
+        </createIndex>
+        <createIndex tableName="url_mapping" indexName="idx_url_mapping_user_id">
+            <column name="user_id" />
+        </createIndex>
+        <createIndex tableName="url_mapping" indexName="idx_url_mapping_idempotency_key">
+            <column name="idempotency_key" />
+        </createIndex>
+
+        <createTable tableName="id_allocation">
+            <column name="allocator_name" type="VARCHAR(64)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="current_max" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- Initial value for block allocator -->
+        <insert tableName="id_allocation">
+            <column name="allocator_name" value="url_shortner" />
+            <column name="current_max" valueNumeric="1000000000" />
+        </insert>
+        
+        <createTable tableName="click_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="short_code" type="VARCHAR(16)">
+                <constraints nullable="false" />
+            </column>
+            <column name="clicked_at" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_agent" type="VARCHAR(512)" />
+            <column name="ip_hash" type="VARCHAR(64)" />
+        </createTable>
+
+        <createIndex tableName="click_event" indexName="idx_click_event_short_code">
+            <column name="short_code" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
