@@ -64,7 +64,7 @@ public class ShortenerService {
     }
 
     public Page<UrlMapping> getUserUrls(String userId, Pageable pageable) {
-        return urlMappingRepository.findByUserId(userId, pageable);
+        return urlMappingRepository.findByUserIdAndIsActive(userId, "Y", pageable);
     }
 
     @CacheEvict(value = "urlCache", key = "#shortCode")

@@ -106,7 +106,7 @@ class ShortenerServiceTest {
     @Test
     void testGetUserUrls() {
         Page<UrlMapping> mockPage = new PageImpl<>(List.of(new UrlMapping()));
-        when(repository.findByUserId(eq("user-1"), any(Pageable.class))).thenReturn(mockPage);
+        when(repository.findByUserIdAndIsActive(eq("user-1"), eq("Y"), any(Pageable.class))).thenReturn(mockPage);
         
         Page<UrlMapping> result = service.getUserUrls("user-1", Pageable.unpaged());
         assertEquals(1, result.getTotalElements());

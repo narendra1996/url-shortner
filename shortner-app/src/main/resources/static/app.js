@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const linksLoading = document.getElementById('linksLoading');
     const refreshBtn = document.getElementById('refreshBtn');
     const linkCardTemplate = document.getElementById('linkCardTemplate');
-    const userIdBadge = document.getElementById('userIdBadge');
 
     // State
     let userId = localStorage.getItem('url_shortener_user_id');
@@ -24,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('url_shortener_user_id', userId);
     }
     
-    // Display shortened user ID
-    userIdBadge.textContent = 'ID: ' + userId.substring(0, 10) + '...';
+    // Display shortened user ID removed
 
     // Initialize
     fetchUrls();
