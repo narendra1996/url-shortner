@@ -352,9 +352,8 @@ input[type="url"]::placeholder {
 
 .long-url {
     font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow-wrap: anywhere;
     max-width: 100%;
 }
 
@@ -447,9 +446,9 @@ input[type="url"]::placeholder {
 
 .card-long-url {
     font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    max-width: 100%;
 }
 
 .card-footer {
