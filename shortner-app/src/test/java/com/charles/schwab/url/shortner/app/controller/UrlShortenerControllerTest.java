@@ -40,6 +40,12 @@ public class UrlShortenerControllerTest {
 
         String shortCode = objectMapper.readTree(shortenResponse).get("shortCode").asText();
 
+        // 2.5 Get QR Code
+        mockMvc.perform(get("/api/v1/urls/" + shortCode + "/qr"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.IMAGE_PNG_VALUE))
+                .andExpect(header().exists("Cache-Control"));
+
         // 2. Get Metadata Lookup
         mockMvc.perform(get("/api/v1/urls/" + shortCode))
                 .andExpect(status().isOk())

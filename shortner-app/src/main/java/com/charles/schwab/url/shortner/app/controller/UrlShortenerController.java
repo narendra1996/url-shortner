@@ -11,9 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class UrlShortenerController {
 
     private final ShortenerService shortenerService;
+    private final com.charles.schwab.url.shortner.core.service.QrCodeService qrCodeService;
 
-    public UrlShortenerController(ShortenerService shortenerService) {
+    @org.springframework.beans.factory.annotation.Value("${app.domain:http://localhost:8080/}")
+    private String domain;
+
+    public UrlShortenerController(ShortenerService shortenerService, 
+                                  com.charles.schwab.url.shortner.core.service.QrCodeService qrCodeService) {
         this.shortenerService = shortenerService;
+        this.qrCodeService = qrCodeService;
     }
 
     @PostMapping("/api/v1/shorten")
@@ -21,5 +27,15 @@ public class UrlShortenerController {
                                                       @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String userId) {
         ShortenResponse response = shortenerService.shorten(request, userId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/api/v1/urls/{shortCode}/qr", produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getQrCode(@PathVariable String shortCode) {
+        // verify it exists and is active (throws UrlNotFoundException if not)
+        shortenerService.getMetadata(shortCode); 
+        byte[] qrImage = qrCodeService.generateQrCode(domain + shortCode);
+        return ResponseEntity.ok()
+                .cacheControl(org.springframework.http.CacheControl.maxAge(7, java.util.concurrent.TimeUnit.DAYS))
+                .body(qrImage);
     }
 }

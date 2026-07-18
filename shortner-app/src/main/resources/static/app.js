@@ -10,12 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultShortUrl = document.getElementById('resultShortUrl');
     const resultLongUrl = document.getElementById('resultLongUrl');
     const copyResultBtn = document.getElementById('copyResultBtn');
+    const qrContainer = document.getElementById('qrContainer');
+    const qrCodeImg = document.getElementById('qrCodeImg');
+    const downloadQrBtn = document.getElementById('downloadQrBtn');
     const linksGrid = document.getElementById('linksGrid');
     const emptyState = document.getElementById('emptyState');
     const linksLoading = document.getElementById('linksLoading');
     const refreshBtn = document.getElementById('refreshBtn');
     const linkCardTemplate = document.getElementById('linkCardTemplate');
-
+    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    
     // State
     let userId = localStorage.getItem('url_shortener_user_id');
     if (!userId) {
@@ -74,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
             resultShortUrl.textContent = data.shortUrl;
             resultShortUrl.href = data.shortUrl;
             resultLongUrl.textContent = longUrl;
+            
+            // Set QR code image
+            const qrUrl = `/api/v1/urls/${data.shortCode}/qr`;
+            qrCodeImg.src = qrUrl;
+            downloadQrBtn.href = qrUrl;
+            qrContainer.classList.remove('hidden');
+
             resultCard.classList.remove('hidden');
             
             showToast('URL shortened successfully!', 'success');
@@ -138,8 +151,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function deleteUrl(shortCode, cardElement) {
-        if (!confirm('Are you sure you want to delete this link?')) return;
+    let urlToDelete = null;
+    let cardToDelete = null;
+
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteConfirmModal.classList.add('hidden');
+        urlToDelete = null;
+        cardToDelete = null;
+    });
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!urlToDelete || !cardToDelete) return;
+        
+        const shortCode = urlToDelete;
+        const cardElement = cardToDelete;
+        
+        deleteConfirmModal.classList.add('hidden');
 
         try {
             const response = await fetch(`/api/v1/urls/${shortCode}`, {
@@ -160,7 +187,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             showToast('Failed to delete link', 'error');
+        } finally {
+            urlToDelete = null;
+            cardToDelete = null;
         }
+    });
+
+    function deleteUrl(shortCode, cardElement) {
+        urlToDelete = shortCode;
+        cardToDelete = cardElement;
+        deleteConfirmModal.classList.remove('hidden');
     }
 
     // Utility Functions
